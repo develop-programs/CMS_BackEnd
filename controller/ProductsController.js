@@ -1,4 +1,3 @@
-import { validate, sanitize } from "some-library";
 const ProductData = require("../model/Products");
 
 /**
@@ -8,7 +7,7 @@ const ProductData = require("../model/Products");
  * @param {object} res - The response object used to send the response to the client.
  * @returns {Promise} - A promise that resolves to the retrieved products as a JSON response.
  */
-export async function GetAllProducts(req, res) {
+async function GetAllProducts(req, res) {
   try {
     const data = await ProductData.find(req.query);
     res.status(200).json(data);
@@ -23,7 +22,7 @@ export async function GetAllProducts(req, res) {
  * @param {object} res - The response object used to send the result of the operation.
  * @returns {Promise<void>} - A promise that resolves when the operation is complete.
  */
-export async function AddProducts(req, res) {
+async function AddProducts(req, res) {
   try {
     const data = req.body;
     await ProductData.create(data);
@@ -33,7 +32,7 @@ export async function AddProducts(req, res) {
   }
 }
 
-export async function EditProducts(req, res) {
+async function EditProducts(req, res) {
   const { id } = req.params;
 
   try {
@@ -42,12 +41,9 @@ export async function EditProducts(req, res) {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    const validatedInput = validate(req.body);
-    const sanitizedInput = sanitize(validatedInput);
-
     const updatedProduct = await ProductData.findOneAndUpdate(
       { id },
-      sanitizedInput,
+      req.body,
       {
         new: true
       }
@@ -64,7 +60,7 @@ export async function EditProducts(req, res) {
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
  */
-export async function DeleteProducts(req, res) {
+async function DeleteProducts(req, res) {
   try {
     const id = req.params.id;
     const product = await ProductData.findById(id);
