@@ -18,22 +18,19 @@ app.use(express.json());
 app.use(cors(corsOption));
 app.set("view engine", "ejs");
 
-// Configuring views with express
-app.get("/", (req, res) => {
-  res.render("home/index");
-});
-
 // Congiguring mongoDB from file .ev
-const URL = process.env.MONGO_LOCAL_URI ?? process.env.MONGO_GLOBAL_URI;
+const URL =  process.env.MONGO_GLOBAL_URI || process.env.MONGO_LOCAL_URI;
 
 // Connecting to mongoDB server
-mongoose
-  .connect(URL)
+// Connect to MongoDB database using Mongoose
+mongoose.connect(URL)
   .then(() => {
+    // Start server using Express
     app.listen(process.env.LOCAL_PORT ?? 3000, () => {
-      console.log(`Listing to port ${process.env.LOCAL_PORT ?? 3000}`);
+      console.log(`Listening to port ${process.env.LOCAL_PORT ?? 3000}`);
     });
   })
-  .catch(() => {
-    console.log("Error while Connecting Mongoose");
+  .catch((err) => {
+    console.log(err);
+    console.log("Error while connecting to MongoDB");
   });
