@@ -6,10 +6,15 @@ const ProductSchema = new mongoose.Schema(
       type: String
     },
     price: {
-      type: Number
+      type: Number,
+      required: true
     },
     desc: {
       type: String
+    },
+    gst: {
+      type: String,
+      required: true
     }
   },
   { timestamps: true }

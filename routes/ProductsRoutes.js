@@ -5,10 +5,11 @@ const {
   EditProducts,
   DeleteProducts
 } = require("../controller/ProductsController");
+const CheckToken = require("../middleware/token");
 
 const Route = express.Router();
 
-Route.get("/", GetAllProducts);
+Route.get("/", CheckToken, GetAllProducts);
 Route.post("/insert", AddProducts);
 Route.patch("/update/:id", EditProducts);
 Route.delete("/delete/:id", DeleteProducts);

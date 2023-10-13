@@ -25,8 +25,12 @@ async function GetAllProducts(req, res) {
 async function AddProducts(req, res) {
   try {
     const data = req.body;
-    await ProductData.create(data);
-    res.status(201).json("Data Uploaded");
+    if (!data) return res.status(404).json({ message: "data not found" });
+    await ProductData.create(data).then((response) => {
+      res.status(201).json({
+        data: response
+      });
+    });
   } catch (error) {
     res.status(404).json(error);
   }
@@ -36,13 +40,13 @@ async function EditProducts(req, res) {
   const { id } = req.params;
 
   try {
-    const existingProduct = await ProductData.findOne({ id });
+    const existingProduct = await ProductData.findOne({ _id: id });
     if (!existingProduct) {
       return res.status(404).json({ error: "Product not found" });
     }
 
     const updatedProduct = await ProductData.findOneAndUpdate(
-      { id },
+      { _id: id },
       req.body,
       {
         new: true
@@ -63,9 +67,9 @@ async function EditProducts(req, res) {
 async function DeleteProducts(req, res) {
   try {
     const id = req.params.id;
-    const product = await ProductData.findById(id);
+    const product = await ProductData.findById({ _id: id });
     if (product) {
-      await ProductData.findByIdAndDelete(id);
+      await ProductData.findByIdAndDelete({ _id: id });
       res.status(200).json({ message: "Product deleted successfully" });
     } else {
       res.status(404).json({ error: "Product not found" });
