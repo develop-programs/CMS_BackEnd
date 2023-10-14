@@ -47,9 +47,6 @@ async function RegisterUser(req, res) {
       gender
     };
 
-    // Generate a JSON Web Token (JWT)
-    const token = jwt.sign(data, process.env.JWT_SECRETE_KEY);
-
     // Save the data to the database
     const response = await AuthData.create(data);
 

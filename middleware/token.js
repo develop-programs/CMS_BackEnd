@@ -14,7 +14,9 @@ async function CheckToken(req, res, next) {
   try {
     const token = req.headers.authorization;
     const split = token.split(" ");
-    const decodedToken = jwt.verify(split[1], process.env.JWT_SECRETE_KEY);
+    const decodedToken = jwt.verify(split[1], process.env.JWT_SECRETE_KEY, {
+      algorithm: HS512,
+    });
     const data = await AuthData.findOne({ email: decodedToken.email });
     if (data) {
       next();

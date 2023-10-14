@@ -9,9 +9,14 @@ const CheckToken = require("../middleware/token");
 
 const Route = express.Router();
 
-Route.get("/", CheckToken, GetAllProducts);
-Route.post("/insert", AddProducts);
-Route.patch("/update/:id", EditProducts);
-Route.delete("/delete/:id", DeleteProducts);
+Route.route("/")
+  .get(CheckToken, GetAllProducts)
+  .post(CheckToken, AddProducts);
+
+Route.route("/update/:id")
+  .patch(CheckToken, EditProducts);
+
+Route.route("/delete/:id")
+  .delete(CheckToken, DeleteProducts);
 
 module.exports = Route;

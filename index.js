@@ -1,38 +1,41 @@
-// PRE Required files Imported
+// Import required modules
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const ejs = require("ejs");
+const cookieParser = require("cookie-parser");
+
 const ProductRoutes = require("./routes/ProductsRoutes");
 const AuthRoute = require("./routes/AuthRoutes");
-const cookieParser = require("cookie-parser")
-// initializing express
+const LoginRoute = require("./routes/loginRoute");
+
+// Initialize Express app
 const app = express();
 
-// Option to Configure cors
+// Configure CORS options
 const corsOption = {
   origin: "*",
   optionsSuccessStatus: 200
 };
 
-// Initializing modules with express
+// Initialize modules with Express
 app.use(express.json());
 app.use(cors(corsOption));
-app.use(cookieParser())
+app.use(cookieParser());
 app.set("view engine", "ejs");
 
-// Congiguring mongoDB from file .ev
+// Configure MongoDB connection URL
 const URL = process.env.MONGO_GLOBAL_URI || process.env.MONGO_LOCAL_URI;
 
-// Connecting to mongoDB server
-// Connect to MongoDB database using Mongoose
+// Connect to MongoDB server using Mongoose
 mongoose
   .connect(URL)
   .then(() => {
     // Start server using Express
     app.use("/products", cors(corsOption), ProductRoutes);
-    app.use("/auth", cors(corsOption), AuthRoute);
+    app.use("/auth/signin", cors(corsOption), AuthRoute);
+    app.use("/auth/login", cors(corsOption), LoginRoute);
     app.listen(process.env.LOCAL_PORT ?? 3000, () => {
       console.log(`Listening to port ${process.env.LOCAL_PORT ?? 3000}`);
     });
