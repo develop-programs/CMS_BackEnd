@@ -5,7 +5,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const ejs = require("ejs");
 const ProductRoutes = require("./routes/ProductsRoutes");
-
+const AuthRoute = require("./routes/AuthRoutes");
+const cookieParser = require("cookie-parser")
 // initializing express
 const app = express();
 
@@ -18,6 +19,7 @@ const corsOption = {
 // Initializing modules with express
 app.use(express.json());
 app.use(cors(corsOption));
+app.use(cookieParser())
 app.set("view engine", "ejs");
 
 // Congiguring mongoDB from file .ev
@@ -30,6 +32,7 @@ mongoose
   .then(() => {
     // Start server using Express
     app.use("/products", cors(corsOption), ProductRoutes);
+    app.use("/auth", cors(corsOption), AuthRoute);
     app.listen(process.env.LOCAL_PORT ?? 3000, () => {
       console.log(`Listening to port ${process.env.LOCAL_PORT ?? 3000}`);
     });

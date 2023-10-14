@@ -6,10 +6,16 @@ const AuthSchema = new mongoose.Schema(
       type: String
     },
     password: {
-      type: Number
+      type: String,
+      required: true
     },
     email: {
-      type: String
+      type: String,
+      required: true
+    },
+    icon: {
+      type: String,
+      default: ""
     },
     gender: {
       type: String
